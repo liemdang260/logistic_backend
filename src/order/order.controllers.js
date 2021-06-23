@@ -24,8 +24,8 @@ exports.delete = async (req, res) => {
     const id = req.params.id
     const makh = req.user[0].makh
     try {
-        const data =await orderModel.delete(id)
-        if(!data){
+        const data = await orderModel.delete(id)
+        if (!data) {
             return res.status(500).send('Lỗi khi xóa đơn hàng!')
         }
     } catch (error) {
@@ -33,4 +33,18 @@ exports.delete = async (req, res) => {
         return res.status(500).send('Lỗi khi xóa đơn hàng!')
     }
     return res.send('Xóa đơn hàng thành công')
+}
+
+
+exports.getOrderById = async (req, res) => {
+    const id = req.params.id
+    try {
+        const data = await orderModel.getOrderById(id)
+        if (!data || !data.length > 0) {
+            return res.status(404).send("Không tìm thấy mã đơn hàng, vui lòng thử lại!")
+        }
+        return res.json(data)
+    } catch (error) {
+        console.log("Lỗi khi lấy đơn hàng, vui lòng thử lại sau!")
+    }
 }

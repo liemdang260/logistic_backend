@@ -3,10 +3,12 @@ const createError = require('http-errors')
 const authRouter = require('../auth/auth.routers')
 const userRouter = require('../user/user.routers')
 const orderRouter = require('../order/order.route')
+const warehouseRouter = require('../warehouse/warehouse.routes')
 
 route.use('/users', userRouter)
 route.use('/auth', authRouter)
 route.use('/order',orderRouter)
+route.use('/warehouse',warehouseRouter)
 
 route.get('/', (req, res) => {
     res.send('APP IS RUNNING')

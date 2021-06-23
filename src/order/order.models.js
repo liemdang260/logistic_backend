@@ -86,3 +86,19 @@ exports.isPermission = async(makh,id)=>{
         return false
     }
 }
+
+exports.getOrderById = async (id)=>{
+    const sqlString = 'select od.madonhang, odd.chieucao, odd.cannang, odd.diachidi, odd.diachiden,gh.tenloai as loaigiaohang,dh.tenloai as loaidonhang,od.phi,th.tentrangthai as trangthai '
+    + 'from khachhang kh '
+    + 'JOIN `order` od on od.makh = kh.MaKH '
+    + 'JOIN orderdetail odd on odd.madonhang = od.madonhang '
+    + 'JOIN loaidonhang dh on dh.maloai = odd.loaidonhang '
+    + 'JOIN loaigiaohang gh on gh.maloai = odd.loaigiaohang '
+    + 'JOIN trangthai th on th.matrangthai = od.trangthai '
+    + 'where odd.madonhang = ?'
+    try {
+        return await database.query(sqlString,[id])
+    } catch (error) {
+        console.log(`loi khi lay don hang: ${error.message}`)
+    }
+}
