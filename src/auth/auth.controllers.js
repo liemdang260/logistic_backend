@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken')
 module.exports.register = async (req, res) => {
     const userName = req.body.user.userName.toLowerCase();
     const user = await userModel.getUser(userName);
-    if (user.length > 0) {
+    if (!user || user.length > 0) {
         res.status(404).send('Tên tài khoản đã tồn tại')
     }
     else {
