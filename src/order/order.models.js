@@ -125,8 +125,7 @@ exports.getOrderSendById = async (id) => {
 exports.getorderReceiveById = async (id) => {
     const sqlString = 'select od.madonhang, kh.TenKH as nguoigui, kh.SDT, od.trangthai '
     +'from `order` od join khachhang kh on od.makh = kh.MaKH '
-    +'where od.nguoinhan = 13'
-    console.log(sqlString)
+    +'where od.nguoinhan = ?'
     try {
         const data = await database.query(sqlString, [id])
         return data
