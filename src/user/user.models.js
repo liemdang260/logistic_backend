@@ -33,6 +33,16 @@ exports.createUser = async (user) => {
 
 }
 
+exports.createCustomer = async (ten, sdt, diachi) => {
+    const sqlString = 'INSERT INTO KHACHHANG(TENKH, SDT, DIACHI) VALUES(?,?,?)'
+    try {
+        const data = await database.query(sqlString, [ten, sdt, diachi])
+        return data.insertId
+    } catch (error) {
+        return null
+    }
+}
+
 exports.updateRefeshToken = async (username, refeshToken) => {
     const sqlString = "UPDATE USER SET REFESHTOKEN = ? WHERE TENDANGNHAP = ?"
     const params = [refeshToken, username]
@@ -45,48 +55,59 @@ exports.updateRefeshToken = async (username, refeshToken) => {
     }
 }
 
-exports.updateClient = async (makh,data) => {
+exports.updateClient = async (makh, data) => {
     const name = data.name
     const phone = data.phone
     const adress = data.adress
-    if(!name&&!phone&&!adress) return false
+    if (!name && !phone && !adress) return false
     let setString = ''
     let params = []
-    
-    if(name) {
+
+    if (name) {
         setString += 'TENKH = ?'
         params.push(name)
-        if(phone){
-            setString+=',SDT = ?',
-            params.push(phone)
+        if (phone) {
+            setString += ',SDT = ?',
+                params.push(phone)
         }
-        if(adress){
-            setString+=',DIACHI = ?'
+        if (adress) {
+            setString += ',DIACHI = ?'
             params.push(adress)
         }
-    }else{
-        if(phone){
-            setString+='SDT = ?',
-            params.push(phone)
-            if(adress){
-                setString+=',DIACHI = ?'
+    } else {
+        if (phone) {
+            setString += 'SDT = ?',
+                params.push(phone)
+            if (adress) {
+                setString += ',DIACHI = ?'
                 params.push(adress)
             }
-        }else{
-            if(adress){
-                setString+='DIACHI = ?'
+        } else {
+            if (adress) {
+                setString += 'DIACHI = ?'
                 params.push(adress)
             }
         }
     }
     const sqlString_updateClient = `UPDATE KHACHHANG SET ${setString} WHERE MAKH = ?`
     params.push(makh)
-    console.log(sqlString_updateClient,params)
     try {
-        const data = await database.query(sqlString_updateClient,params)
-        console.log(data)
+        const data = await database.query(sqlString_updateClient, params)
         return true
     } catch (error) {
         return false
     }
 }
+
+
+exports.findClientByPhone = async (phone) => {
+    const sqlString = 'SELECT * FROM KHACHHANG WHERE SDT = ?'
+    try {
+        const data = database.query(sqlString, [phone])
+        return data
+    } catch (error) {
+        console.log(`Loi tim kh qu sdt: ${error.message}`)
+        return null
+    }
+}
+

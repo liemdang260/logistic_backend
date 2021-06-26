@@ -48,3 +48,29 @@ exports.getOrderById = async (req, res) => {
         console.log("Lỗi khi lấy đơn hàng, vui lòng thử lại sau!")
     }
 }
+
+exports.getOrderSend = async (req, res) => {
+    const id = req.user[0].makh
+    try {
+        const data = await orderModel.getOrderSendById(id)
+        if (!data) {
+            return res.status(500).send("Lỗi khi lây đơn hàng, vui lòng thử lại sau!")
+        }
+        res.json(data)
+    } catch (error) {
+        return res.status(500).send("Lỗi khi lây đơn hàng, vui lòng thử lại sau!")
+    }
+}
+
+exports.getOrderReceive = async (req, res) => {
+    const id = req.user[0].makh
+    try {
+        const data = await orderModel.getorderReceiveById(id)
+        if (!data) {
+            return res.status(500).send("Lỗi khi lây đơn hàng, vui lòng thử lại sau!")
+        }
+        res.json(data)
+    } catch (error) {
+        return res.status(500).send("Lỗi khi lây đơn hàng, vui lòng thử lại sau!")
+    }
+}

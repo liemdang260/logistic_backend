@@ -84,13 +84,14 @@ body:
     "order":{
         "chieucao": "aaa",
         "cannang": 2.5,
-        "diachidi": "fdfsd",
-        "diachiden": "sdfs",
+        "diachidi": "ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức",
+        "diachiden": "122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận",
         "loaigiaohang": "1",
         "loaidonhang": "1",
-        "phi": "250000.00"
+        "phi": "250000.00",
+        "nguoinhan":"liem",
+        "sdt": "0000000000"
     }
-    
 }
 
 -------------------------------------------------------------------------------
@@ -104,11 +105,31 @@ headers:
 	"x_authorization":"access token"
 }
 -------------------------------------------------------------------------------
-+search : lấy order theo id
++lấy chi tiết order : lấy order theo id
 /order/id
 vd: order/2
 
 GET
+-------------------------------------------------------------------------------
+
++lấy order nhận theo mã khách hàng
+/order/receive
+
+GET
+headers:
+{
+	"x_authorization":"access token"
+}
+-------------------------------------------------------------------------------
+
+
++Lấy order gửi theo mã khách hàng
+/order/send
+
+GET
+{
+	"x_authorization":"access token"
+}
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 +Lấy Tất cả kho hàng

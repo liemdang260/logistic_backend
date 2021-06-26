@@ -8,5 +8,8 @@ router.get('/profile',authMiddleware.isAuth,async(req, res)=>{
     res.send(req.user)
 })
 
+router.get('/findbyphone',userController.findByPhone)
+
 router.post('/update',authMiddleware.isAuth,userController.updateUser)
 module.exports = router
+
