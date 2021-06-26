@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 18, 2021 at 02:53 PM
+-- Generation Time: Jun 26, 2021 at 07:16 AM
 -- Server version: 10.4.16-MariaDB
 -- PHP Version: 7.4.12
 
@@ -71,7 +71,7 @@ CREATE TABLE `chitietkho` (
 CREATE TABLE `khachhang` (
   `MaKH` int(11) NOT NULL,
   `TenKH` varchar(255) NOT NULL,
-  `SDT` varchar(10) DEFAULT NULL,
+  `SDT` varchar(10) NOT NULL,
   `DiaChi` varchar(250) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -80,8 +80,13 @@ CREATE TABLE `khachhang` (
 --
 
 INSERT INTO `khachhang` (`MaKH`, `TenKH`, `SDT`, `DiaChi`) VALUES
-(7, 'liem', '0000000000', 'TPHCM'),
-(8, '', NULL, NULL);
+(13, 'liem', '0000000000', 'TPHCM'),
+(15, 'liem', '0000000001', 'fdfsd'),
+(18, 'liem', '0000000002', 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức'),
+(19, 'liem', '000000001', 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức'),
+(24, 'liem', '000000003', 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức'),
+(25, 'liem', '000000005', 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức'),
+(26, 'bảo', '0000000010', 'TPHCM');
 
 -- --------------------------------------------------------
 
@@ -157,16 +162,22 @@ CREATE TABLE `order` (
   `madonhang` int(11) NOT NULL,
   `makh` int(11) NOT NULL,
   `phi` decimal(15,2) DEFAULT NULL,
-  `trangthai` int(4) DEFAULT 1
+  `trangthai` int(4) DEFAULT 1,
+  `nguoinhan` int(11) DEFAULT NULL,
+  `diachinhan` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `order`
 --
 
-INSERT INTO `order` (`madonhang`, `makh`, `phi`, `trangthai`) VALUES
-(1, 7, '250000.00', 2),
-(14, 8, '250000.00', 1);
+INSERT INTO `order` (`madonhang`, `makh`, `phi`, `trangthai`, `nguoinhan`, `diachinhan`) VALUES
+(17, 13, '250000.00', 1, 25, '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận'),
+(18, 13, '250000.00', 1, 25, '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận'),
+(19, 13, '250000.00', 1, 24, '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận'),
+(20, 26, '250000.00', 1, 25, '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận'),
+(21, 26, '250000.00', 1, 24, '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận'),
+(22, 26, '250000.00', 1, 13, '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận');
 
 --
 -- Triggers `order`
@@ -198,8 +209,12 @@ CREATE TABLE `orderdetail` (
 --
 
 INSERT INTO `orderdetail` (`mact`, `madonhang`, `chieucao`, `cannang`, `diachidi`, `diachiden`, `loaidonhang`, `loaigiaohang`) VALUES
-(1, 1, 2.5, 2.5, 'fdfsd', 'sdfs', 3, 3),
-(13, 14, 0, 2.5, 'fdfsd', 'sdfs', 1, 1);
+(16, 17, 0, 2.5, 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức', '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận', 1, 1),
+(17, 18, 0, 2.5, 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức', '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận', 1, 1),
+(18, 19, 0, 2.5, 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức', '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận', 1, 1),
+(19, 20, 0, 2.5, 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức', '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận', 1, 1),
+(20, 21, 0, 2.5, 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức', '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận', 1, 1),
+(21, 22, 0, 2.5, 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức', '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -242,8 +257,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`madn`, `tendangnhap`, `matkhau`, `makh`, `refeshtoken`) VALUES
-(14, 'efjff', '$2b$10$2vWBOFYyIJNIDiVjJch3Z.ZrfU2HkqU.O3MIMS6qI38/DUBe5TEZe', 7, 'J8jw1ZtSHeCCChN5'),
-(15, 'liem', '$2b$10$i1F08c3xVJupCA.Yl4StCuiZ6IFwtvFwXhBrTukT7P6TyB4YbOeZa', 8, 'QwSuyiZ2zWPnY6p0');
+(20, 'liem', '$2b$10$WmI8mFZgpnEDe8LNlNH6GuyD1c0dBg33VID4oCS6c76qhzirXcCpO', 13, 'Mf0Co6hSyZoLpqtv'),
+(21, 'liem1', '$2b$10$DsLPip7sSzwyHTlYMy0SBOUlwmDqgcCUsvGlXCucBjSqsRwC4ofVi', 26, 'WC8nrk9XkA9XF1WQ');
 
 --
 -- Indexes for dumped tables
@@ -269,7 +284,8 @@ ALTER TABLE `chitietkho`
 -- Indexes for table `khachhang`
 --
 ALTER TABLE `khachhang`
-  ADD PRIMARY KEY (`MaKH`);
+  ADD PRIMARY KEY (`MaKH`),
+  ADD UNIQUE KEY `SDT_unique` (`SDT`);
 
 --
 -- Indexes for table `kho`
@@ -340,7 +356,7 @@ ALTER TABLE `chitietkho`
 -- AUTO_INCREMENT for table `khachhang`
 --
 ALTER TABLE `khachhang`
-  MODIFY `MaKH` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `MaKH` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `kho`
@@ -364,13 +380,13 @@ ALTER TABLE `loaigiaohang`
 -- AUTO_INCREMENT for table `order`
 --
 ALTER TABLE `order`
-  MODIFY `madonhang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `madonhang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `orderdetail`
 --
 ALTER TABLE `orderdetail`
-  MODIFY `mact` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `mact` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `trangthai`
@@ -382,7 +398,7 @@ ALTER TABLE `trangthai`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `madn` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `madn` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- Constraints for dumped tables
