@@ -2,7 +2,15 @@ const userModel = require('./user.models')
 
 exports.updateUser = async (req, res) => {
     const data = req.body.user
-    console.log(req.user[0].makh)
+    
+    try {
+        const phoneExist = await userModel.phoneExist(data)
+        if(phoneExist){
+            return res.status(409).send("Số điện thoại này đã tồn tại!")
+        }
+    } catch (error) {
+        
+    }
     const result = await userModel.updateClient(req.user[0].makh, data)
     if (result) {
         res.status(201).send("Update thành công!")

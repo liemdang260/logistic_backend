@@ -18,10 +18,37 @@ module.exports.register = async (req, res) => {
         }
         const createUser = await userModel.createUser(newUser)
         if (!createUser) {
-            return res.status(400)
+            return res.status(500)
                 .send('Có lỗi trong quá trình tạo tài khoản, vui lòng thử lại')
         }
-        return res.send(userName)
+        const accessTokenLife = process.env.ACCESS_TOKEN_LIFE
+        const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
+        const dataForAccessToken = {
+            username: userName
+        }
+        const accessToken = await authMethod.generateToken(
+            dataForAccessToken,
+            accessTokenSecret,
+            accessTokenLife
+        )
+
+        if (!accessToken) {
+            return res.status(401).send("Đăng nhập không thành công, vui lòng thử lại")
+        }
+
+        let refeshToken = randToken.generate(16);
+        if (!user.refeshtoken) {
+            await userModel.updateRefeshToken(userName, refeshToken)
+        } else {
+            refeshToken = user.refeshToken
+        }
+
+
+        return res.json({
+            msg: "Đăng Kí Thành Công",
+            username: userName,
+            accessToken: accessToken
+        })
     }
 }
 
@@ -70,12 +97,12 @@ module.exports.login = async (req, res) => {
 module.exports.refreshToken = async (req, res) => {
 
     const accessTokenFromHeader = req.headers.x_authorization;
-    if(!accessTokenFromHeader){
+    if (!accessTokenFromHeader) {
         return res.status(400).send("Không tìm thấy access token")
     }
 
     const refreshTokenFromBody = req.body.refreshToken;
-    if(!refreshTokenFromBody){
+    if (!refreshTokenFromBody) {
         return res.status(400).send("Không tìm thấy refresh token")
     }
     const accessTokenLife = process.env.ACCESS_TOKEN_LIFE
@@ -86,18 +113,18 @@ module.exports.refreshToken = async (req, res) => {
         accessTokenSecret
     )
 
-    if(!decode){
+    if (!decode) {
         return res.status(404).send("Access Token không hợp lệ")
     }
     const userName = decode.payload.username
     const user = (await userModel.getUser(userName))[0]
 
     console.log(userName)
-    if(!user){
+    if (!user) {
         return res.status(404).send("User không tồn tại!")
     }
 
-    if(refreshTokenFromBody != user.refeshtoken){
+    if (refreshTokenFromBody != user.refeshtoken) {
         return res.status(400).send("refresh token không hợp lệ!")
     }
 
@@ -110,7 +137,7 @@ module.exports.refreshToken = async (req, res) => {
         accessTokenLife
     )
 
-    if(!accessToken){
+    if (!accessToken) {
         return res.status(400).send("Tạo access token không thành công, vui lòng thử lại")
     }
 

@@ -25,7 +25,6 @@ exports.createUser = async (user) => {
     const params = [user.userName, user.password, insert_client_id]
     try {
         const data = await database.query(sqlString, params)
-        console.log(data)
         return true
     } catch (error) {
         return false
@@ -46,10 +45,8 @@ exports.createCustomer = async (ten, sdt, diachi) => {
 exports.updateRefeshToken = async (username, refeshToken) => {
     const sqlString = "UPDATE USER SET REFESHTOKEN = ? WHERE TENDANGNHAP = ?"
     const params = [refeshToken, username]
-    console.log(refeshToken, username)
     try {
         const data = await database.query(sqlString, params)
-        console.log(data)
     } catch (error) {
 
     }
@@ -111,3 +108,13 @@ exports.findClientByPhone = async (phone) => {
     }
 }
 
+exports.phoneExists = async (phone, makh) => {
+    const sqlString = "SELECT * FROM KHACHHANG WHERE SDT = ? AND MAKH <> ?"
+    try {
+        const data = database.query(sqlString, [phone, makh])
+        if(!data || !data.length >0) return false
+        return true
+    } catch (error) {
+        return false
+    }
+}
