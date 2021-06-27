@@ -1,10 +1,11 @@
 const mysql = require('mysql2/promise')
 
 const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'logistic',
+    host: 'freedb.tech',
+    port: 3306,
+    user: 'freedbtech_liemdang',
+    password: 'liemdang',
+    database: 'freedbtech_logistic',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
@@ -17,3 +18,10 @@ module.exports.query = async (sqlString, params = []) => {
 }
 
 
+// host: 'localhost',
+//     user: 'root',
+//     password: '',
+//     database: 'logistic',
+//     waitForConnections: true,
+//     connectionLimit: 10,
+//     queueLimit: 0

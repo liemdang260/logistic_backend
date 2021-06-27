@@ -30,20 +30,20 @@ exports.create = async (makh, data) => {
     }
 
     const orderInsert = (async (makh, data) => {
-        const insertOrder = 'INSERT INTO `ORDER`(MAKH,PHI,NGUOINHAN,DIACHINHAN) VALUES(?,?,?,?)'
+        const insertOrder = 'insert into `order`(makh,phi,nguoinhan,diachinhan) values(?,?,?,?)'
         const params = [makh, data.phi, manguoinhan, data.diachiden]
         try {
             const result = await database.query(insertOrder, params)
             return result.insertId
         } catch (error) {
-            console.log('loi khi them don hang')
+            console.log(`loi khi them don hang : ${error.message}`)
             return false
         }
     })
     const id = await orderInsert(makh, data)
     if (!id) return false
 
-    const insertOrderDetail = 'INSERT INTO ORDERDETAIL(MADONHANG,CHIEUCAO,CANNANG,DIACHIDI,DIACHIDEN,LOAIDONHANG,LOAIGIAOHANG) VALUES(?,?,?,?,?,?,?)'
+    const insertOrderDetail = 'insert into orderdetail(madonhang,chieucao,cannang,diachidi,diachiden,loaidonhang,loaigiaohang) values(?,?,?,?,?,?,?)'
     const params = [
         id,
         data.chieucao,
@@ -72,7 +72,7 @@ exports.create = async (makh, data) => {
 }
 
 exports.delete = async (id) => {
-    const deleteOrderString = 'DELETE FROM `ORDER` WHERE MADONHANG = ?'
+    const deleteOrderString = 'delete from `order` where madonhang = ?'
     try {
         const data = await database.query(deleteOrderString, [id])
         return data.affectedRows
@@ -84,7 +84,7 @@ exports.delete = async (id) => {
 }
 
 exports.isPermission = async (makh, id) => {
-    const sqlString = 'SELECT * FROM `order` where makh = ? and madonhang = ?'
+    const sqlString = 'select * from `order` where makh = ? and madonhang = ?'
     try {
         const data = await database.query(sqlString, [makh, id])
         return (!data || !data.length > 0)

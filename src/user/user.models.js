@@ -12,17 +12,18 @@ exports.getUser = async (userName) => {
 
 exports.createUser = async (user) => {
     let insert_client_id
-    const sqlString_createClient = 'INSERT INTO KHACHHANG VALUES()'
+    const sqlString_createClient = 'insert into khachhang values()'
     try {
         const data = await database.query(sqlString_createClient)
         insert_client_id = data.insertId
     } catch (error) {
+        console.log(error.message)
         return null
     }
 
     if (!insert_client_id) return false
 
-    const sqlString = 'INSERT INTO USER(username,password,MAKH) VALUES(?,?,?)'
+    const sqlString = 'insert into user(username,password,makh) values(?,?,?)'
     const params = [user.userName, user.password, insert_client_id]
     try {
         const data = await database.query(sqlString, params)
@@ -34,7 +35,7 @@ exports.createUser = async (user) => {
 }
 
 exports.createCustomer = async (ten, sdt, diachi) => {
-    const sqlString = 'INSERT INTO KHACHHANG(TENKH, SDT, DIACHI) VALUES(?,?,?)'
+    const sqlString = 'insert into khachhang(TenKH, SDT, DiaChi) values(?,?,?)'
     try {
         const data = await database.query(sqlString, [ten, sdt, diachi])
         return data.insertId
@@ -44,7 +45,7 @@ exports.createCustomer = async (ten, sdt, diachi) => {
 }
 
 exports.updateRefeshToken = async (username, refeshToken) => {
-    const sqlString = "UPDATE USER SET REFESHTOKEN = ? WHERE USERNAME = ?"
+    const sqlString = "update user set refeshtoken = ? where username = ?"
     const params = [refeshToken, username]
     try {
         const data = await database.query(sqlString, params)
@@ -62,14 +63,14 @@ exports.updateClient = async (makh, data) => {
     let params = []
 
     if (name) {
-        setString += 'TENKH = ?'
+        setString += 'TenKH = ?'
         params.push(name)
         if (phone) {
             setString += ',SDT = ?',
                 params.push(phone)
         }
         if (adress) {
-            setString += ',DIACHI = ?'
+            setString += ',DiaChi = ?'
             params.push(adress)
         }
     } else {
@@ -77,17 +78,17 @@ exports.updateClient = async (makh, data) => {
             setString += 'SDT = ?',
                 params.push(phone)
             if (adress) {
-                setString += ',DIACHI = ?'
+                setString += ',DiaChi = ?'
                 params.push(adress)
             }
         } else {
             if (adress) {
-                setString += 'DIACHI = ?'
+                setString += 'DiaChi = ?'
                 params.push(adress)
             }
         }
     }
-    const sqlString_updateClient = `UPDATE KHACHHANG SET ${setString} WHERE MAKH = ?`
+    const sqlString_updateClient = `update khachhang set ${setString} where MaKH = ?`
     params.push(makh)
     try {
         const data = await database.query(sqlString_updateClient, params)
@@ -99,7 +100,7 @@ exports.updateClient = async (makh, data) => {
 
 
 exports.findClientByPhone = async (phone) => {
-    const sqlString = 'SELECT * FROM KHACHHANG WHERE SDT = ?'
+    const sqlString = 'select * from khachhang where SDT = ?'
     try {
         const data = database.query(sqlString, [phone])
         return data
@@ -110,7 +111,7 @@ exports.findClientByPhone = async (phone) => {
 }
 
 exports.phoneExists = async (phone, makh) => {
-    const sqlString = "SELECT * FROM KHACHHANG WHERE SDT = ? AND MAKH <> ?"
+    const sqlString = "select * from khachhang where SDT = ? and MaKH <> ?"
     try {
         const data = database.query(sqlString, [phone, makh])
         if(!data || !data.length >0) return false

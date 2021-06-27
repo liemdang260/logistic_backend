@@ -1,7 +1,7 @@
 const database = require('../database/mysql')
 
 module.exports.getAll = async () => {
-    const sqlString ='SELECT * FROM KHO'
+    const sqlString ='select * from kho'
     try {
         const data = await database.query(sqlString)
         return data
