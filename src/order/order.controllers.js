@@ -11,7 +11,7 @@ exports.getAll = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
-    const data = req.body.order
+    const data = req.body
     const user = req.user[0]
     const created = await orderModel.create(user.makh, data)
     if (!created) {

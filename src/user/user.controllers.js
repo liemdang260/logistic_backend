@@ -1,7 +1,7 @@
 const userModel = require('./user.models')
 
 exports.updateUser = async (req, res) => {
-    const data = req.body.user
+    const data = req.body
     
     try {
         const phoneExist = await userModel.phoneExist(data)

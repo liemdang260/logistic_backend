@@ -1,7 +1,8 @@
+const { compare } = require('bcrypt');
 const database = require('../database//mysql')
 
 exports.getUser = async (userName) => {
-    const sqlString = 'SELECT * from user where tendangnhap = ?'
+    const sqlString = 'SELECT * from user where username = ?'
     try {
         return await database.query(sqlString, [userName])
     } catch (error) {
@@ -21,7 +22,7 @@ exports.createUser = async (user) => {
 
     if (!insert_client_id) return false
 
-    const sqlString = 'INSERT INTO USER(TENDANGNHAP,MATKHAU,MAKH) VALUES(?,?,?)'
+    const sqlString = 'INSERT INTO USER(username,password,MAKH) VALUES(?,?,?)'
     const params = [user.userName, user.password, insert_client_id]
     try {
         const data = await database.query(sqlString, params)
@@ -43,7 +44,7 @@ exports.createCustomer = async (ten, sdt, diachi) => {
 }
 
 exports.updateRefeshToken = async (username, refeshToken) => {
-    const sqlString = "UPDATE USER SET REFESHTOKEN = ? WHERE TENDANGNHAP = ?"
+    const sqlString = "UPDATE USER SET REFESHTOKEN = ? WHERE USERNAME = ?"
     const params = [refeshToken, username]
     try {
         const data = await database.query(sqlString, params)

@@ -24,7 +24,7 @@ exports.create = async (makh, data) => {
     const nguoinhan = (await userModel.findClientByPhone(data.sdt))[0]
     let manguoinhan = 0
     if (!nguoinhan) {
-        manguoinhan = await userModel.createCustomer(data.nguoinhan, data.sdt, data.diachidi)
+        manguoinhan = await userModel.createCustomer(data.nguoinhan, data.sdt, data.diachiden)
     } else {
         manguoinhan = nguoinhan.MaKH
     }

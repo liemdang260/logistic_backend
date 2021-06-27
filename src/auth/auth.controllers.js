@@ -5,13 +5,13 @@ const randToken = require('rand-token')
 const jwt = require('jsonwebtoken')
 
 module.exports.register = async (req, res) => {
-    const userName = req.body.user.userName.toLowerCase();
+    const userName = req.body.userName.toLowerCase();
     const user = await userModel.getUser(userName);
     if (!user || user.length > 0) {
         res.status(404).send('Tên tài khoản đã tồn tại')
     }
     else {
-        const password = bcrypt.hashSync(req.body.user.password, 10)
+        const password = bcrypt.hashSync(req.body.password, 10)
         const newUser = {
             userName,
             password
@@ -53,14 +53,22 @@ module.exports.register = async (req, res) => {
 }
 
 module.exports.login = async (req, res) => {
-    const userName = req.body.user.userName
-    const password = req.body.user.password
-    const user = (await userModel.getUser(userName))[0]
-
-    if (!user) {
-        return res.status(401).send('Tên đặng nhập không tồn tại!')
+    const userName = req.body.userName
+    const password = req.body.password
+    let user
+    try {
+        const users = (await userModel.getUser(userName))
+        if (!users || !users.length >0) {
+            return res.status(401).send('Tên đặng nhập không tồn tại!')
+        }
+        user = users[0]
+    } catch (error) {
+        
     }
-    const isPasswordvalid = bcrypt.compareSync(password, user.matkhau)
+    
+
+    
+    const isPasswordvalid = bcrypt.compareSync(password, user.password)
     if (!isPasswordvalid) {
         return res.status(401).send("Mật khẩu không chính xác!")
     }
@@ -90,7 +98,7 @@ module.exports.login = async (req, res) => {
         msg: "Đăng nhập thành công",
         accessToken,
         refeshToken,
-        user
+        ...user
     })
 }
 

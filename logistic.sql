@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 27, 2021 at 04:34 AM
+-- Generation Time: Jun 27, 2021 at 11:28 AM
 -- Server version: 10.4.16-MariaDB
 -- PHP Version: 7.4.12
 
@@ -70,7 +70,7 @@ CREATE TABLE `chitietkho` (
 
 CREATE TABLE `khachhang` (
   `MaKH` int(11) NOT NULL,
-  `TenKH` varchar(255) DEFAULT NULL,
+  `TenKH` varchar(255) DEFAULT '',
   `SDT` varchar(10) DEFAULT NULL,
   `DiaChi` varchar(250) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -80,11 +80,10 @@ CREATE TABLE `khachhang` (
 --
 
 INSERT INTO `khachhang` (`MaKH`, `TenKH`, `SDT`, `DiaChi`) VALUES
-(27, 'Liêm', '0000000011', 'TPHCM'),
-(28, 'liem', '0000000000', 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức'),
-(29, 'liem', '0000000002', 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức'),
-(33, 'Bảo', '0000000001', 'TPHCM'),
-(34, '', '', NULL);
+(39, 'Bảo', '0000000012', 'TPHCM'),
+(40, '', NULL, NULL),
+(41, 'Bảo', '0000000012', 'TPHCM'),
+(43, 'liem', '0000000011', '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận');
 
 -- --------------------------------------------------------
 
@@ -170,10 +169,7 @@ CREATE TABLE `order` (
 --
 
 INSERT INTO `order` (`madonhang`, `makh`, `phi`, `trangthai`, `nguoinhan`, `diachinhan`) VALUES
-(24, 27, '250000.00', 1, 28, '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận'),
-(25, 27, '250000.00', 1, 29, '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận'),
-(26, 33, '250000.00', 1, 27, '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận'),
-(27, 33, '250000.00', 1, 27, '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận');
+(32, 41, '250000.00', 1, 43, '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận');
 
 --
 -- Triggers `order`
@@ -205,10 +201,7 @@ CREATE TABLE `orderdetail` (
 --
 
 INSERT INTO `orderdetail` (`mact`, `madonhang`, `chieucao`, `cannang`, `diachidi`, `diachiden`, `loaidonhang`, `loaigiaohang`) VALUES
-(23, 24, 2.5, 2.5, 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức', '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận', 1, 1),
-(24, 25, 2.5, 2.5, 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức', '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận', 1, 1),
-(25, 26, 2.5, 2.5, 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức', '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận', 1, 1),
-(26, 27, 2.5, 2.5, 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức', '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận', 1, 1);
+(31, 32, 2.5, 2.5, 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức', '122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -240,8 +233,8 @@ INSERT INTO `trangthai` (`matrangthai`, `tentrangthai`) VALUES
 
 CREATE TABLE `user` (
   `madn` int(10) NOT NULL,
-  `tendangnhap` varchar(50) NOT NULL,
-  `matkhau` text DEFAULT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` text DEFAULT NULL,
   `makh` int(11) DEFAULT NULL,
   `refeshtoken` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -250,10 +243,10 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`madn`, `tendangnhap`, `matkhau`, `makh`, `refeshtoken`) VALUES
-(22, 'liem@gmail.com', '$2b$10$pt0KYgBFV7Xc.r4I7D5FzeFKNrB8Xw2bHTC0hs7/atlrzaa6d4NEW', 27, 'Du2LiFOcTvUQwkJt'),
-(23, 'bao@gmail.com', '$2b$10$JHDS/3MEvWpTsZ2rPNKvUeO4Wajbc0nyQsw2OFe83Esc95TjnckIC', 33, 'tsDNxcdRZcHb76F4'),
-(24, 'bao1@gmail.com', '$2b$10$BVE6ar7wOOBshCHZps8tYeawJvOpo4ayg5h4giVqZtxp4pxg/gkfa', 34, NULL);
+INSERT INTO `user` (`madn`, `username`, `password`, `makh`, `refeshtoken`) VALUES
+(29, 'bao@gmail.com', '$2b$10$IAD7PV08fy6f54nTOb2l2OJhd3/V0Tojown/eU.PVDbZtNql3xOHy', 39, 'fPH9FIIgZfZ6vf69'),
+(30, 'bao1@gmail.com', '$2b$10$9efyAv5KI4XqUCyNq33hf.kPSJSVMhjsdPkM6RbfxwLs/k4UTzBq.', 40, '9b0Fq6URQznssS9j'),
+(31, 'bao12@gmail.com', '$2b$10$rG0nTtFEdv36DXwy6k0Ny.yx6TefPdCGhgithvYRFNnfFug0CTTsi', 41, '7dwa1I7QfHnFoA0g');
 
 --
 -- Indexes for dumped tables
@@ -279,8 +272,7 @@ ALTER TABLE `chitietkho`
 -- Indexes for table `khachhang`
 --
 ALTER TABLE `khachhang`
-  ADD PRIMARY KEY (`MaKH`),
-  ADD UNIQUE KEY `SDT_unique` (`SDT`);
+  ADD PRIMARY KEY (`MaKH`);
 
 --
 -- Indexes for table `kho`
@@ -328,7 +320,7 @@ ALTER TABLE `trangthai`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`madn`),
-  ADD UNIQUE KEY `username_unique` (`tendangnhap`),
+  ADD UNIQUE KEY `username_unique` (`username`),
   ADD KEY `fk_dangnhap_khachhang_makh` (`makh`);
 
 --
@@ -351,7 +343,7 @@ ALTER TABLE `chitietkho`
 -- AUTO_INCREMENT for table `khachhang`
 --
 ALTER TABLE `khachhang`
-  MODIFY `MaKH` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `MaKH` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `kho`
@@ -375,13 +367,13 @@ ALTER TABLE `loaigiaohang`
 -- AUTO_INCREMENT for table `order`
 --
 ALTER TABLE `order`
-  MODIFY `madonhang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `madonhang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `orderdetail`
 --
 ALTER TABLE `orderdetail`
-  MODIFY `mact` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `mact` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `trangthai`
@@ -393,7 +385,7 @@ ALTER TABLE `trangthai`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `madn` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `madn` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- Constraints for dumped tables
