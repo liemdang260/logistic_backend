@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 26, 2021 at 07:37 AM
+-- Generation Time: Jun 27, 2021 at 04:34 AM
 -- Server version: 10.4.16-MariaDB
 -- PHP Version: 7.4.12
 
@@ -70,8 +70,8 @@ CREATE TABLE `chitietkho` (
 
 CREATE TABLE `khachhang` (
   `MaKH` int(11) NOT NULL,
-  `TenKH` varchar(255) NOT NULL,
-  `SDT` varchar(10) NOT NULL,
+  `TenKH` varchar(255) DEFAULT NULL,
+  `SDT` varchar(10) DEFAULT NULL,
   `DiaChi` varchar(250) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -83,7 +83,8 @@ INSERT INTO `khachhang` (`MaKH`, `TenKH`, `SDT`, `DiaChi`) VALUES
 (27, 'Liêm', '0000000011', 'TPHCM'),
 (28, 'liem', '0000000000', 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức'),
 (29, 'liem', '0000000002', 'ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức'),
-(33, 'Bảo', '0000000001', 'TPHCM');
+(33, 'Bảo', '0000000001', 'TPHCM'),
+(34, '', '', NULL);
 
 -- --------------------------------------------------------
 
@@ -251,7 +252,8 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`madn`, `tendangnhap`, `matkhau`, `makh`, `refeshtoken`) VALUES
 (22, 'liem@gmail.com', '$2b$10$pt0KYgBFV7Xc.r4I7D5FzeFKNrB8Xw2bHTC0hs7/atlrzaa6d4NEW', 27, 'Du2LiFOcTvUQwkJt'),
-(23, 'bao@gmail.com', '$2b$10$JHDS/3MEvWpTsZ2rPNKvUeO4Wajbc0nyQsw2OFe83Esc95TjnckIC', 33, 'tsDNxcdRZcHb76F4');
+(23, 'bao@gmail.com', '$2b$10$JHDS/3MEvWpTsZ2rPNKvUeO4Wajbc0nyQsw2OFe83Esc95TjnckIC', 33, 'tsDNxcdRZcHb76F4'),
+(24, 'bao1@gmail.com', '$2b$10$BVE6ar7wOOBshCHZps8tYeawJvOpo4ayg5h4giVqZtxp4pxg/gkfa', 34, NULL);
 
 --
 -- Indexes for dumped tables
@@ -349,7 +351,7 @@ ALTER TABLE `chitietkho`
 -- AUTO_INCREMENT for table `khachhang`
 --
 ALTER TABLE `khachhang`
-  MODIFY `MaKH` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `MaKH` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `kho`
@@ -391,7 +393,7 @@ ALTER TABLE `trangthai`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `madn` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `madn` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- Constraints for dumped tables
