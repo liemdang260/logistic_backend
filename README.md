@@ -4,10 +4,8 @@
 POST
 body :
 {
-    "user":{
-        "userName":"efjff",
-        "password":"efjf"
-    }
+    "userName": "khoi@gmail.com",
+    "password": "khoi"
 }
 -------------------------------------------------------------------------------
 + đăng nhập -> trả về access token dùng để xác thực + 1 đối tượng thông tin user
@@ -16,10 +14,8 @@ body :
 POST
 body: 
 {
-    "user":{
-        "userName":"efjff",
-        "password":"efjf"
-    }
+    "userName": "khoi@gmail.com",
+    "password": "khoi"
 }
 ------------------------------------------------------------------------------
 +refresh access token -> tạo 1 access token mới khi cái cũ hết hạn -> duy trì đăng nhập
@@ -53,11 +49,9 @@ headers:
 }
 body:
 {
-    "user":{
-        "name":"liem",
-        "phone":"0000000000",
-        "adress":"TPHCM"
-    }
+    "name": "Bảo",
+    "phone": "0000000000",
+    "adress": "TPHCM"
 }
 
 -------------------------------------------------------------------------------
@@ -81,19 +75,16 @@ headers:
 
 body:
 {
-    "order":{
-        "chieucao": "aaa",
-        "cannang": 2.5,
-        "diachidi": "ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức",
-        "diachiden": "122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận",
-        "loaigiaohang": "1",
-        "loaidonhang": "1",
-        "phi": "250000.00",
-        "nguoinhan":"liem",
-        "sdt": "0000000000"
-    }
+    "chieucao": "2.5",
+    "cannang": 2.5,
+    "diachidi": "ktx khu A, Khu phố 6, phường Linh Trung, Thủ Đức",
+    "diachiden": "122 Phạm Ngọc Thạch, Thị Trấn Ma Lâm, Hàm Thuận Bắc, Bình Thuận",
+    "loaigiaohang": "1",
+    "loaidonhang": "1",
+    "phi": "250000.00",
+    "nguoinhan": "liem",
+    "sdt": "0000000001"
 }
-
 -------------------------------------------------------------------------------
 +xóa 1 order bằng id
 /order/id
