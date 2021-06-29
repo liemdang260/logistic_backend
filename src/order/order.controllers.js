@@ -57,12 +57,15 @@ exports.getOrderById = async (req, res) => {
     const id = req.params.id
     try {
         const data = await orderModel.getOrderById(id)
-        if (!data || !data.length > 0) {
+        console.log(data)
+        if (data === null){
+            return res.status(500).send("Đã có lỗi xảy ra, vui lòng thử lại!")
+        }else if(data === false) {
             return res.status(404).send("Không tìm thấy mã đơn hàng, vui lòng thử lại!")
         }
         return res.json(data)
     } catch (error) {
-        console.log("Lỗi khi lấy đơn hàng, vui lòng thử lại sau!")
+        return res.status(500).send("Đã có lỗi xảy ra, vui lòng thử lại!")
     }
 }
 

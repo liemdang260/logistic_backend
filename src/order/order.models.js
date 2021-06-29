@@ -32,10 +32,10 @@ exports.create = async (makh, data) => {
     const tmp_path = data.files.image[0].path
     const result = await uploader(tmp_path)
     const url = result.url
-    
-    
+
+
     const khnhan = data.fields.khnhan
-    if(!khnhan || !khnhan.length >0){
+    if (!khnhan || !khnhan.length > 0) {
         return false
     }
     const sdt = (JSON.parse(khnhan[0])).sdt
@@ -47,7 +47,7 @@ exports.create = async (makh, data) => {
     let manguoinhan = 0
     if (!nguoinhan) {
         ten = (JSON.parse(khnhan[0])).name
-        
+
         manguoinhan = await userModel.createCustomer(ten, sdt, diachinhan)
     } else {
         manguoinhan = nguoinhan.MaKH
@@ -55,7 +55,7 @@ exports.create = async (makh, data) => {
 
     const orderInsert = (async (makh, data) => {
         const insertOrder = 'insert into `order`(makh,phi,nguoinhan,diachidi,diachinhan,image) values(?,?,?,?,?,?)'
-        const params = [makh, data.phi, data.manguoinhan,data.diachidi, data.diachinhan, data.image]
+        const params = [makh, data.phi, data.manguoinhan, data.diachidi, data.diachinhan, data.image]
         try {
             const result = await database.query(insertOrder, params)
             return result.insertId
@@ -64,12 +64,12 @@ exports.create = async (makh, data) => {
             return false
         }
     })
-    const id = await orderInsert(makh, {phi,manguoinhan,diachidi,diachinhan,image:url})
+    const id = await orderInsert(makh, { phi, manguoinhan, diachidi, diachinhan, image: url })
     if (!id) return false
     const orderdetail = JSON.parse(data.fields.dshanghoa[0])
-    
 
-    const insertDetail = async (data)=>{
+
+    const insertDetail = async (data) => {
         const insertOrderDetail = 'insert into orderdetail(madonhang,tensp,cannang,soluong) values(?,?,?,?)'
         const params = [
             ...data
@@ -90,8 +90,8 @@ exports.create = async (makh, data) => {
         }
     }
 
-    for(detail of orderdetail){
-        const params = [id,detail.tensp,detail.cannang,detail.soluong]
+    for (detail of orderdetail) {
+        const params = [id, detail.tensp, detail.cannang, detail.soluong]
         await insertDetail(params)
     }
     return true
@@ -123,13 +123,47 @@ exports.isPermission = async (makh, id) => {
 }
 
 exports.getOrderById = async (id) => {
-    const sqlString = 'select od.madonhang, odd.cannang, odd.diachidi, odd.diachiden,'
-       
+    const sqlString = 'select od.madonhang, kh.TenKH,kh.SDT,od.diachidi,od.diachinhan,od.image,od.phi,od.trangthai '
+        + 'from `order` od join khachhang kh on od.makh = kh.MaKH '
+        + 'where od.madonhang = ?'
+    let data
     try {
-        return await database.query(sqlString, [id])
+        data = await database.query(sqlString, [id])
+        if (!data || !data.length > 0)
+            return false
     } catch (error) {
         console.log(`loi khi lay don hang: ${error.message}`)
+        return null
     }
+    data = data[0]
+    let detailOfId
+    const getOrderDetail = 'select tensp, cannang,soluong from orderdetail where madonhang = ?'
+    try {
+        const details = await database.query(getOrderDetail, [id])
+        if (!details) {
+            return null
+        }
+        if (!details.length > 0)
+            return false
+        detailOfId = details
+    } catch (error) {
+        return null
+    }
+    console.log(detailOfId)
+    const kq = {
+        image: data.image,
+        dshanghoa: detailOfId,
+        khnhan: {
+            name: data.TenKH,
+            sdt: data.SDT,
+        },
+        diachidi: data.diachidi,
+        diachinhan: data.diachinhan,
+        chiphi: data.phi,
+        trangthai: data.trangthai
+
+    }
+    return kq
 }
 
 
@@ -147,8 +181,8 @@ exports.getOrderSendById = async (id) => {
 
 exports.getorderReceiveById = async (id) => {
     const sqlString = 'select od.madonhang, kh.TenKH as nguoigui, kh.SDT, od.trangthai '
-    +'from `order` od join khachhang kh on od.makh = kh.MaKH '
-    +'where od.nguoinhan = ?'
+        + 'from `order` od join khachhang kh on od.makh = kh.MaKH '
+        + 'where od.nguoinhan = ?'
     try {
         const data = await database.query(sqlString, [id])
         return data
