@@ -41,6 +41,7 @@ exports.create = async (makh, data) => {
     const sdt = (JSON.parse(khnhan[0])).sdt
     const diachinhan = data.fields.diachinhan[0]
     const phi = data.fields.chiphi[0]
+    const diachidi = data.fields.diachidi[0]
 
     const nguoinhan = (await userModel.findClientByPhone(sdt))[0]
     let manguoinhan = 0
@@ -53,8 +54,8 @@ exports.create = async (makh, data) => {
     }
 
     const orderInsert = (async (makh, data) => {
-        const insertOrder = 'insert into `order`(makh,phi,nguoinhan,diachinhan,image) values(?,?,?,?,?)'
-        const params = [makh, data.phi, data.manguoinhan, data.diachinhan, data.image]
+        const insertOrder = 'insert into `order`(makh,phi,nguoinhan,diachidi,diachinhan,image) values(?,?,?,?,?,?)'
+        const params = [makh, data.phi, data.manguoinhan,data.diachidi, data.diachinhan, data.image]
         try {
             const result = await database.query(insertOrder, params)
             return result.insertId
@@ -63,13 +64,13 @@ exports.create = async (makh, data) => {
             return false
         }
     })
-    const id = await orderInsert(makh, {phi,manguoinhan,diachinhan,image:url})
+    const id = await orderInsert(makh, {phi,manguoinhan,diachidi,diachinhan,image:url})
     if (!id) return false
     const orderdetail = JSON.parse(data.fields.dshanghoa[0])
-    const diachidi = data.fields.diachidi[0]
+    
 
     const insertDetail = async (data)=>{
-        const insertOrderDetail = 'insert into orderdetail(madonhang,tensp,cannang,soluong,diachidi,diachiden) values(?,?,?,?,?,?)'
+        const insertOrderDetail = 'insert into orderdetail(madonhang,tensp,cannang,soluong) values(?,?,?,?)'
         const params = [
             ...data
         ]
@@ -90,7 +91,7 @@ exports.create = async (makh, data) => {
     }
 
     for(detail of orderdetail){
-        const params = [id,detail.tensp,detail.cannang,detail.soluong,diachidi,diachinhan]
+        const params = [id,detail.tensp,detail.cannang,detail.soluong]
         await insertDetail(params)
     }
     return true
@@ -122,13 +123,8 @@ exports.isPermission = async (makh, id) => {
 }
 
 exports.getOrderById = async (id) => {
-    const sqlString = 'select od.madonhang, odd.chieucao, odd.cannang, odd.diachidi, odd.diachiden,gh.tenloai as loaigiaohang,dh.tenloai as loaidonhang,od.phi,od.trangthai as trangthai '
-        + 'from khachhang kh '
-        + 'JOIN `order` od on od.makh = kh.MaKH '
-        + 'JOIN orderdetail odd on odd.madonhang = od.madonhang '
-        + 'JOIN loaidonhang dh on dh.maloai = odd.loaidonhang '
-        + 'JOIN loaigiaohang gh on gh.maloai = odd.loaigiaohang '
-        + 'where odd.madonhang = ?'
+    const sqlString = 'select od.madonhang, odd.cannang, odd.diachidi, odd.diachiden,'
+       
     try {
         return await database.query(sqlString, [id])
     } catch (error) {
