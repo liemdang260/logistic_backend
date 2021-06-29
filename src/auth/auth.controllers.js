@@ -65,7 +65,7 @@ module.exports.login = async (req, res) => {
     } catch (error) {
         
     }
-    
+    const customerName = (await userModel.getCustomerById(user.makh))[0].TenKH
 
     
     const isPasswordvalid = bcrypt.compareSync(password, user.password)
@@ -98,7 +98,8 @@ module.exports.login = async (req, res) => {
         msg: "Đăng nhập thành công",
         accessToken,
         refeshToken,
-        ...user
+        ...user,
+        customerName
     })
 }
 

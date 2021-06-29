@@ -120,3 +120,13 @@ exports.phoneExists = async (phone, makh) => {
         return false
     }
 }
+
+exports.getCustomerById = async (id)=>{
+    const sqlString = 'select * from khachhang where makh = ?'
+    try {
+        const data = await database.query(sqlString,[id])
+        return data
+    } catch (error) {
+        
+    }
+}

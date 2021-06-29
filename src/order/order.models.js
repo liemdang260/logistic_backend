@@ -96,17 +96,17 @@ exports.create = async (makh, data) => {
     return true
 
 
-// }
+}
 
-// exports.delete = async (id) => {
-//     const deleteOrderString = 'delete from `order` where madonhang = ?'
-//     try {
-//         const data = await database.query(deleteOrderString, [id])
-//         return data.affectedRows
-//     } catch (error) {
-//         console.log(error.message)
-//         return false
-//     }
+exports.delete = async (id) => {
+    const deleteOrderString = 'delete from `order` where madonhang = ?'
+    try {
+        const data = await database.query(deleteOrderString, [id])
+        return data.affectedRows
+    } catch (error) {
+        console.log(error.message)
+        return false
+    }
 
 }
 
