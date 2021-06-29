@@ -2,6 +2,7 @@ const route = require('express').Router()
 const orderController = require('./order.controllers')
 const isAuth = require('../auth/auth.middlewares').isAuth
 const isPermission = require('./order.middlewares').isPermission
+const upload = require('../services/multer')
 
 
 route.get('/', isAuth, orderController.getAll)

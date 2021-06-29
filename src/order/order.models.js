@@ -1,5 +1,6 @@
 const database = require('../database/mysql')
 const userModel = require('../user/user.models')
+const clouldinary = require('../services/cloudinary')
 exports.getAll = async (makh) => {
     const sqlstring = 'select od.madonhang, odd.chieucao, odd.cannang, odd.diachidi, odd.diachiden,gh.tenloai as loaigiaohang,dh.tenloai as loaidonhang,od.phi,th.tentrangthai as trangthai '
         + 'from khachhang kh '
@@ -19,19 +20,41 @@ exports.getAll = async (makh) => {
     }
 }
 
-exports.create = async (makh, data) => {
+const uploader = async (path) => {
+    try {
+        return await clouldinary.upload(path, 'Images')
+    } catch (error) {
+        console.log(error.message)
+    }
+}
 
-    const nguoinhan = (await userModel.findClientByPhone(data.sdt))[0]
+exports.create = async (makh, data) => {
+    const tmp_path = data.files.image[0].path
+    const result = await uploader(tmp_path)
+    const url = result.url
+    
+    
+    const khnhan = data.fields.khnhan
+    if(!khnhan || !khnhan.length >0){
+        return false
+    }
+    const sdt = (JSON.parse(khnhan[0])).sdt
+    const diachinhan = data.fields.diachinhan[0]
+    const phi = data.fields.chiphi[0]
+
+    const nguoinhan = (await userModel.findClientByPhone(sdt))[0]
     let manguoinhan = 0
     if (!nguoinhan) {
-        manguoinhan = await userModel.createCustomer(data.nguoinhan, data.sdt, data.diachiden)
+        ten = (JSON.parse(khnhan[0])).name
+        
+        manguoinhan = await userModel.createCustomer(ten, sdt, diachinhan)
     } else {
         manguoinhan = nguoinhan.MaKH
     }
 
     const orderInsert = (async (makh, data) => {
-        const insertOrder = 'insert into `order`(makh,phi,nguoinhan,diachinhan) values(?,?,?,?)'
-        const params = [makh, data.phi, manguoinhan, data.diachiden]
+        const insertOrder = 'insert into `order`(makh,phi,nguoinhan,diachinhan,image) values(?,?,?,?,?)'
+        const params = [makh, data.phi, data.manguoinhan, data.diachinhan, data.image]
         try {
             const result = await database.query(insertOrder, params)
             return result.insertId
@@ -40,46 +63,50 @@ exports.create = async (makh, data) => {
             return false
         }
     })
-    const id = await orderInsert(makh, data)
+    const id = await orderInsert(makh, {phi,manguoinhan,diachinhan,image:url})
     if (!id) return false
+    const orderdetail = JSON.parse(data.fields.dshanghoa[0])
+    const diachidi = data.fields.diachidi[0]
 
-    const insertOrderDetail = 'insert into orderdetail(madonhang,chieucao,cannang,diachidi,diachiden,loaidonhang,loaigiaohang) values(?,?,?,?,?,?,?)'
-    const params = [
-        id,
-        data.chieucao,
-        data.cannang,
-        data.diachidi,
-        data.diachiden,
-        data.loaidonhang,
-        data.loaigiaohang
-    ]
-    try {
-        const result = await database.query(insertOrderDetail, params)
-        return true
-    } catch (error) {
-        console.log(`Loi khi them chi tiet: ${error.message}`)
-        const deleteOrder = `DELETE ORDER WHERE MADONHANG = ?`
+    const insertDetail = async (data)=>{
+        const insertOrderDetail = 'insert into orderdetail(madonhang,tensp,cannang,soluong,diachidi,diachiden) values(?,?,?,?,?,?)'
+        const params = [
+            ...data
+        ]
         try {
-            const result = await database.query(deleteOrder, [id])
+            const result = await database.query(insertOrderDetail, params)
+            return true
         } catch (error) {
-            console.log("Loi nghien trong")
-            console.log(error.message)
+            console.log(`Loi khi them chi tiet: ${error.message}`)
+            const deleteOrder = `DELETE ORDER WHERE MADONHANG = ?`
+            try {
+                const result = await database.query(deleteOrder, [id])
+            } catch (error) {
+                console.log("Loi nghien trong")
+                console.log(error.message)
+            }
+            return false
         }
-        return false
     }
 
-
-}
-
-exports.delete = async (id) => {
-    const deleteOrderString = 'delete from `order` where madonhang = ?'
-    try {
-        const data = await database.query(deleteOrderString, [id])
-        return data.affectedRows
-    } catch (error) {
-        console.log(error.message)
-        return false
+    for(detail of orderdetail){
+        const params = [id,detail.tensp,detail.cannang,detail.soluong,diachidi,diachinhan]
+        await insertDetail(params)
     }
+    return true
+
+
+// }
+
+// exports.delete = async (id) => {
+//     const deleteOrderString = 'delete from `order` where madonhang = ?'
+//     try {
+//         const data = await database.query(deleteOrderString, [id])
+//         return data.affectedRows
+//     } catch (error) {
+//         console.log(error.message)
+//         return false
+//     }
 
 }
 

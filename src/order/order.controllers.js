@@ -1,4 +1,5 @@
 const orderModel = require('./order.models')
+const multiparty = require('multiparty')
 exports.getAll = async (req, res) => {
     const user = req.user[0];
     const data = await orderModel.getAll(user.makh)
@@ -11,9 +12,25 @@ exports.getAll = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
-    const data = req.body
     const user = req.user[0]
-    const created = await orderModel.create(user.makh, data)
+    
+    const parse = async (req) => {
+        return new Promise((onSuccess, onError) => {
+            let form = new multiparty.Form();
+            form.parse(req, function (err, fields, files) {
+                if (err) {
+                    onError(err)
+                } else {
+                    onSuccess({fields, files})
+                }
+            });
+        })
+    }
+    
+
+    const data = await parse(req)
+    
+    const created = await orderModel.create(user.makh,data)
     if (!created) {
         return res.status(400).send("Lỗi khi tạo đơn hàng, vui lòng thử lại!")
     }
