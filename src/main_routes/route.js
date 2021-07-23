@@ -4,11 +4,13 @@ const authRouter = require('../auth/auth.routers')
 const userRouter = require('../user/user.routers')
 const orderRouter = require('../order/order.route')
 const warehouseRouter = require('../warehouse/warehouse.routes')
+const adminRouter = require('../admin/admin.route')
 
 route.use('/users', userRouter)
 route.use('/auth', authRouter)
 route.use('/order',orderRouter)
 route.use('/warehouse',warehouseRouter)
+route.use('/admin',adminRouter)
 
 route.get('/', (req, res) => {
     res.send('APP IS RUNNING')

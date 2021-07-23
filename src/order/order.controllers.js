@@ -13,6 +13,7 @@ exports.getAll = async (req, res) => {
 
 exports.create = async (req, res) => {
     const user = req.user[0]
+    console.log(req.user)
     
     const parse = async (req) => {
         return new Promise((onSuccess, onError) => {

@@ -10,6 +10,16 @@ exports.getUser = async (userName) => {
     }
 }
 
+exports.getUserByGoogle = async (username) => {
+    const sqlString = 'select * from userbygoogle where username = ?'
+    try {
+        const data = await database.query(sqlString, [username])
+        return data
+    } catch (error) {
+        return null
+    }
+}
+
 exports.createUser = async (user) => {
     let insert_client_id
     const sqlString_createClient = 'insert into khachhang values()'
@@ -34,6 +44,16 @@ exports.createUser = async (user) => {
 
 }
 
+exports.createUserWithGoogle = async (username, customercode) => {
+    const sqlString = 'insert into userbygoogle(username,makh) values (?,?)'
+    try {
+        const result = await database.query(sqlString, [username, customercode])
+        return result
+    } catch (error) {
+        console.log(error.message)
+        return null
+    }
+}
 exports.createCustomer = async (ten, sdt, diachi) => {
     const sqlString = 'insert into khachhang(TenKH, SDT, DiaChi) values(?,?,?)'
     try {
@@ -49,6 +69,17 @@ exports.updateRefeshToken = async (username, refeshToken) => {
     const params = [refeshToken, username]
     try {
         const data = await database.query(sqlString, params)
+    } catch (error) {
+
+    }
+}
+
+exports.updateRefeshTokenByGoogle = async (username, refeshToken) => {
+    const sqlString = "update userbygoogle set refeshtoken = ? where username = ?"
+    const params = [refeshToken, username]
+    try {
+        const data = await database.query(sqlString, params)
+        console.log(data)
     } catch (error) {
 
     }
@@ -114,19 +145,44 @@ exports.phoneExists = async (phone, makh) => {
     const sqlString = "select * from khachhang where SDT = ? and MaKH <> ?"
     try {
         const data = database.query(sqlString, [phone, makh])
-        if(!data || !data.length >0) return false
+        if (!data || !data.length > 0) return false
         return true
     } catch (error) {
         return false
     }
 }
 
-exports.getCustomerById = async (id)=>{
+exports.getCustomerById = async (id) => {
     const sqlString = 'select * from khachhang where makh = ?'
     try {
-        const data = await database.query(sqlString,[id])
+        const data = await database.query(sqlString, [id])
         return data
     } catch (error) {
-        
+
+    }
+}
+
+
+exports.getAllCustomer = async () => {
+    const sqlString = 'select  kh.MaKH as makh,kh.TenKH as tenkh,kh.SDT as sdt,kh.DiaChi as diachi, count(od.madonhang) as sodonhang '
+        + 'from khachhang kh LEFT join `order` od on kh.MaKH = od.makh '
+        + 'GROUP by kh.MaKH,kh.TenKH,kh.SDT,kh.DiaChi'
+    try {
+        const data = await database.query(sqlString)
+        return data
+    } catch (error) {
+        return null
+    }
+}
+
+exports.deleteCustomer = async(id)=>{
+    const sqlString = 'delete from khachhang where Makh = ? '
+    try {
+        const result = await database.query(sqlString,[id])
+        console.log(result)
+        return result.affectedRows
+    } catch (error) {
+        console.log(error.message)
+        return null
     }
 }

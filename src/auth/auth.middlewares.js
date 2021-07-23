@@ -18,7 +18,10 @@ exports.isAuth = async (req, res, next) => {
         return res.status(401).send('Bạn không có quyền truy cập vào tính năng này!')
     }
 
-    const user = await userModel.getUser(verified.payload.username)
+    let user = await userModel.getUser(verified.payload.username)
+    if (user.length == 0)
+        user = await userModel.getUserByGoogle(verified.payload.username)
+    
     req.user = user
     return next()
 }

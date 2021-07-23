@@ -33,17 +33,18 @@ exports.create = async (makh, data) => {
     const result = await uploader(tmp_path)
     const url = result.url
 
-
     const khnhan = data.fields.khnhan
     if (!khnhan || !khnhan.length > 0) {
         return false
     }
+    console.log(khnhan)
     const sdt = (JSON.parse(khnhan[0])).sdt
     const diachinhan = data.fields.diachinhan[0]
     const phi = data.fields.chiphi[0]
     const diachidi = data.fields.diachidi[0]
 
     const nguoinhan = (await userModel.findClientByPhone(sdt))[0]
+    console.log(nguoinhan)
     let manguoinhan = 0
     if (!nguoinhan) {
         ten = (JSON.parse(khnhan[0])).name
@@ -52,7 +53,7 @@ exports.create = async (makh, data) => {
     } else {
         manguoinhan = nguoinhan.MaKH
     }
-
+    console.log(manguoinhan)
     const orderInsert = (async (makh, data) => {
         const insertOrder = 'insert into `order`(makh,phi,nguoinhan,diachidi,diachinhan,image) values(?,?,?,?,?,?)'
         const params = [makh, data.phi, data.manguoinhan, data.diachidi, data.diachinhan, data.image]
@@ -103,6 +104,7 @@ exports.delete = async (id) => {
     const deleteOrderString = 'delete from `order` where madonhang = ?'
     try {
         const data = await database.query(deleteOrderString, [id])
+        console.log(data)
         return data.affectedRows
     } catch (error) {
         console.log(error.message)
@@ -123,9 +125,9 @@ exports.isPermission = async (makh, id) => {
 }
 
 exports.getOrderById = async (id) => {
-    const sqlString = 'select od.madonhang, kh.TenKH,kh.SDT,od.diachidi,od.diachinhan,od.image,od.phi,od.trangthai '
-        + 'from `order` od join khachhang kh on od.makh = kh.MaKH '
-        + 'where od.madonhang = ?'
+    const sqlString = 'select od.madonhang, kh.TenKH,kh.SDT,od.diachidi,od.diachinhan,od.image,od.phi,od.trangthai, kh2.TenKH as nguoigui, kh2.SDT as sdtnguoigui '
+    +'from `order` od join khachhang kh on od.nguoinhan = kh.MaKH join khachhang kh2 on od.makh = kh2.MaKH '
+    +'where od.madonhang = ?'
     let data
     try {
         data = await database.query(sqlString, [id])
@@ -153,6 +155,10 @@ exports.getOrderById = async (id) => {
     const kq = {
         image: data.image,
         dshanghoa: detailOfId,
+        khgui:{
+            name:data.nguoigui,
+            sdt:data.sdtnguoigui
+        },
         khnhan: {
             name: data.TenKH,
             sdt: data.SDT,
@@ -186,6 +192,29 @@ exports.getorderReceiveById = async (id) => {
     try {
         const data = await database.query(sqlString, [id])
         return data
+    } catch (error) {
+        console.log(error.message)
+        return null
+    }
+}
+
+exports.getAllOrder = async ()=>{
+    const sqlstring = 'select od.madonhang,kh2.TenKH as nguoigui, kh.tenkh as nguoinhan, kh.SDT, od.trangthai,od.diachinhan '
+    +'from `order` od join khachhang kh on od.nguoinhan = kh.MaKH '
+    +'join khachhang kh2 on od.makh = kh2.makh'
+    try {
+        return await database.query(sqlstring)
+    } catch (error) {
+        console.log(`loi: ${error.message}`)
+        return null
+    }
+}
+
+exports.updateStatus = async (id, newStatus)=>{
+    const sqlString = 'update `order` set trangthai = ? where madonhang = ?'
+    try {
+        const result = await database.query(sqlString,[newStatus,id])
+        return result.affectedRows
     } catch (error) {
         console.log(error.message)
         return null

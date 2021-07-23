@@ -2,3 +2,9 @@ https://freedb.tech/dashboard/
 
 username: liemdang
 pass: liemdang
+
+
+heroku
+
+username : gioanliem78@gmail.com
+pass: Liemdang00!    

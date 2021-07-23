@@ -4,9 +4,7 @@ const userController = require('./user.controllers')
 
 const router = express.Router()
 
-router.get('/profile',authMiddleware.isAuth,async(req, res)=>{
-    res.send(req.user[0])
-})
+router.get('/profile',authMiddleware.isAuth,userController.getProfile)
 
 router.get('/findbyphone',userController.findByPhone)
 

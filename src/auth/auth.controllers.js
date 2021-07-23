@@ -58,16 +58,16 @@ module.exports.login = async (req, res) => {
     let user
     try {
         const users = (await userModel.getUser(userName))
-        if (!users || !users.length >0) {
+        if (!users || !users.length > 0) {
             return res.status(401).send('Tên đặng nhập không tồn tại!')
         }
         user = users[0]
     } catch (error) {
-        
+
     }
     const customerName = (await userModel.getCustomerById(user.makh))[0].TenKH
 
-    
+
     const isPasswordvalid = bcrypt.compareSync(password, user.password)
     if (!isPasswordvalid) {
         return res.status(401).send("Mật khẩu không chính xác!")
@@ -101,6 +101,108 @@ module.exports.login = async (req, res) => {
         ...user,
         customerName
     })
+}
+
+module.exports.loginWithGoogle = async (req, res) => {
+    const data = req.body
+    const userName = data.email
+    try {
+        const users = (await userModel.getUserByGoogle(userName))
+        if (!users.length > 0) {
+            const customer = await userModel.createCustomer(data.name, data.sdt, data.diachi)
+            if (!customer) {
+                return res.status('500').send("Có lỗi xảy ra khi tạo khách hàng, vui lòng thử lại!")
+            }
+            const result = await userModel.createUserWithGoogle(userName, customer)
+            console.log(result)
+            const customer_info = (await userModel.getCustomerById(customer))[0]
+
+            
+            const accessTokenLife = process.env.ACCESS_TOKEN_LIFE
+            const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
+            const dataForAccessToken = {
+                username: userName
+            }
+            const accessToken = await authMethod.generateToken(
+                dataForAccessToken,
+                accessTokenSecret,
+                accessTokenLife
+            )
+            
+            if (!accessToken) {
+                return res.status(401).send("Đăng nhập không thành công, vui lòng thử lại")
+            }
+
+            let refeshToken = randToken.generate(16);
+            if (!users.refeshtoken) {
+                await userModel.updateRefeshTokenByGoogle(userName, refeshToken)
+            } else {
+                refeshToken = users.refeshToken
+            }
+
+
+            return res.json({
+                msg: "Đăng Kí Thành Công",
+                accessToken: accessToken,
+                madn:result.insertId,
+                username: userName,
+                makh:customer_info.MaKH,
+                refeshToken:refeshToken,
+                customerName:data.name
+            })
+        } else if (!users) {
+            throw new Error("Co loi xay ra")
+        }
+        else {
+            let user
+            try {
+                const users = (await userModel.getUserByGoogle(userName))
+                if (!users || !users.length > 0) {
+                    return res.status(401).send('Tên đặng nhập không tồn tại!')
+                }
+                user = users[0]
+            } catch (error) {
+        
+            }
+            const customerName = (await userModel.getCustomerById(user.makh))[0].TenKH
+
+            const accessTokenLife = process.env.ACCESS_TOKEN_LIFE
+            const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
+            const dataForAccessToken = {
+                username: userName
+            }
+            const accessToken = await authMethod.generateToken(
+                dataForAccessToken,
+                accessTokenSecret,
+                accessTokenLife
+            )
+
+            if (!accessToken) {
+                return res.status(401).send("Đăng nhập không thành công, vui lòng thử lại")
+            }
+
+            console.log(user)
+            let refeshToken = randToken.generate(16);
+            if (!user.refeshtoken) {
+                await userModel.updateRefeshTokenByGoogle(user.username, refeshToken)
+                
+            } else {
+                refeshToken = user.refeshtoken
+            }
+            console.log(refeshToken)
+            return res.json({
+                msg: "Đăng nhập thành công",
+                accessToken,
+                refeshToken,
+                madn:user.logincode,
+                userName:user.username,
+                makh:user.makh,
+                customerName
+            })
+        }
+    } catch (error) {
+        console.log(error.message)
+    }
 }
 
 module.exports.refreshToken = async (req, res) => {
